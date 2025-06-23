@@ -19,10 +19,12 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 # Crear token JWT
 def crear_token(data: dict):
+
     to_encode = data.copy()
-    expira = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expira = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expira})
     token_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    print(token_jwt)
     return token_jwt
 
 # Verificar token en rutas protegidas

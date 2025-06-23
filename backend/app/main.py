@@ -36,7 +36,7 @@ def hola():
 
 #Ruta para cargar el CSV
 @app.post("/api/upload-csv")
-async def upload_csv(file: UploadFile = File(...)):#, user=Depends(verificar_token)
+async def upload_csv(file: UploadFile = File(...), user=Depends(verificar_token)):# , user=Depends(verificar_token)
     if not file.filename.endswith(".csv"):
         raise HTTPException(status_code=400, detail="Solo se permiten archivos CSV")
 
@@ -56,7 +56,7 @@ async def upload_csv(file: UploadFile = File(...)):#, user=Depends(verificar_tok
         db[collection_name].insert_many(records)
         
         return {
-            "mensaje": f"Archivo cargado con éxito",
+            "mensaje": f"Archivo cargado con éxito por {user}",
             "registros_insertados": len(records),
             "coleccion": collection_name,
             "columnas": list(df.columns)
@@ -65,11 +65,11 @@ async def upload_csv(file: UploadFile = File(...)):#, user=Depends(verificar_tok
         raise HTTPException(status_code=500, detail=f"Error al procesar el CSV: {str(e)}")
 
 @app.get("/api/colecciones")
-def listar_colecciones():
+def listar_colecciones(user=Depends(verificar_token)):
     return db.list_collection_names()
 
 @app.get("/api/registros/{coleccion}")
-def obtener_registros(coleccion: str):
+def obtener_registros(coleccion: str, user=Depends(verificar_token)):
     if coleccion not in db.list_collection_names():
         raise HTTPException(status_code=404, detail="Colección no encontrada")
 
