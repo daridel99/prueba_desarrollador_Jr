@@ -47,7 +47,7 @@ async def upload_csv(file: UploadFile = File(...)):#, user=Depends(verificar_tok
         sample = contents.decode("utf-8").splitlines()[0]
         dialect = csv.Sniffer().sniff(sample)
 
-        df = pd.read_csv(pd.io.common.BytesIO(contents), sep=dialect.delimiter)
+        df = pd.read_csv(pd.io.common.BytesIO(contents), sep=";")#dialect.delimiter
 
         # Insertar en mongo
         records = df.to_dict(orient="records")

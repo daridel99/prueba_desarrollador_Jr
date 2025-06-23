@@ -4,6 +4,8 @@ Python 3.9.6
 
 React: 19.1.0
 
+MongoDB
+
 
 
 • • Ruta para ejecutar el Backend ->
@@ -92,11 +94,34 @@ GET	/api/colecciones	Listar colecciones
 
 GET	/api/registros/{coleccion}	Obtener datos de una colección
 
+___________________________________________________________________________________
+
+Se inician los proyectos, vamos a ver la siguente vista:
+
+![alt text](image.png)
+
+
+para fectos del ejercicio las credenciales son username=admin  password=1234
+
+se autenticara y generara un token, lo que nos dara un aviso y veremos la siguiente vista:
+
+
+![alt text](image-1.png)
+
+
+se tiene una prueba de conexion lo que nos entrega el mensaje "Hola desde FastAPI", la subida del csv y una lista desplegable con las colecciones existentes que se pueden visualizar.
+
+
+al seleccionar una coleccion, se puede dar click izq para ordenar desendente o asendente, ademas si son mas de 50 registros por vista, genera una paginacion.
+
+
+![alt text](image-2.png)
+
+
+![alt text](image-3.png)
 
 
 
-
-
+___________________________________________________________________________________
 
 Desarrollado por: Dario Delgado
-Contacto: ddelgado@identidadtech.com
