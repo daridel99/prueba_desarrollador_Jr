@@ -1,0 +1,7 @@
+fastapi==0.115.13
+uvicorn==0.34.3
+pymongo==4.13.2
+pandas==2.3.0
+python-jose==3.5.0
+python-multipart==0.0.20
+passlib==1.7.4

@@ -1,8 +1,12 @@
-venv/
-venv310/
+venv
+venv310
 __pycache__/
 *.pyc
 *.env
 .env
 node_modules/
 dist/
+data.csv
+file.xlsx
+prueba_desarrollador_Jr.rar
+Readme Api Csv.docx

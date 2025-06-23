@@ -9,8 +9,6 @@ from fastapi import HTTPException
 from bson import json_util
 import json
 import csv
-from io import StringIO
-
 
 app = FastAPI()
 
@@ -30,11 +28,8 @@ def saludo():
 # Ruta para login
 @app.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    print("Login recibido:", form_data.username, form_data.password)
     if form_data.username == fake_user["username"] and form_data.password == fake_user["password"]:
-        print('hola')
         token = crear_token({"sub": form_data.username})
-        print(token)
         return {"access_token": token, "token_type": "bearer"}
     raise HTTPException(status_code=401, detail="Credenciales inválidas")
 
@@ -43,7 +38,7 @@ def hola():
     return {"mensaje": "Hola desde FastAPI"}
 
 @app.post("/api/upload-csv")
-async def upload_csv(file: UploadFile = File(...)):
+async def upload_csv(file: UploadFile = File(...), user=Depends(verificar_token)):
     if not file.filename.endswith(".csv"):
         raise HTTPException(status_code=400, detail="Solo se permiten archivos CSV")
 
@@ -54,9 +49,8 @@ async def upload_csv(file: UploadFile = File(...)):
         sample = contents.decode("utf-8").splitlines()[0]
         dialect = csv.Sniffer().sniff(sample)
 
-        # Convertir a DataFrame
         df = pd.read_csv(pd.io.common.BytesIO(contents), sep=dialect.delimiter)
-        print(df)
+
         # Insertar en MongoDB como lista de diccionarios
         records = df.to_dict(orient="records")
         
@@ -64,7 +58,7 @@ async def upload_csv(file: UploadFile = File(...)):
         db[collection_name].insert_many(records)
         
         return {
-            "mensaje": "Archivo cargado con éxito",
+            "mensaje": f"Archivo cargado con éxito por {user}",
             "registros_insertados": len(records),
             "coleccion": collection_name,
             "columnas": list(df.columns)
@@ -74,10 +68,11 @@ async def upload_csv(file: UploadFile = File(...)):
 
 @app.get("/api/colecciones")
 def listar_colecciones():
+    #user=Depends(verificar_token) print(f"Acceso autorizado por: {user}")
     return db.list_collection_names()
 
 @app.get("/api/registros/{coleccion}")
-def obtener_registros(coleccion: str, limite: int = 100):
+def obtener_registros(coleccion: str): #limite: int = 100
     if coleccion not in db.list_collection_names():
         raise HTTPException(status_code=404, detail="Colección no encontrada")
 
