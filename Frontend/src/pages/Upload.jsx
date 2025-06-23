@@ -33,13 +33,6 @@ const Upload = ({ onUploadSuccess , token }) => {
 
     } catch (error) {
 
-      if (error.response?.status === 401) {
-        alert("Sesión expirada. Por favor, inicia sesión nuevamente.");
-        localStorage.removeItem("token");
-        window.location.reload();
-        return;
-      }
-
       setMensaje("Error: " + (error.response?.data?.detail || error.message));
       setInfo(null);
       
