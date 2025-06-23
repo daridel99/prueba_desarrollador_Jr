@@ -10,15 +10,6 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [recargarColecciones, setRecargarColecciones] = useState(false);
 
-  // Guarda el token en localStorage cada vez que cambia
-  useEffect(() => {
-    if (!token || token === "undefined") {
-      setToken("");
-      localStorage.removeItem("token");
-    }
-  }, [token]);
-  
-
   // Llamado desde upload para indicar recarga
   const notificarNuevaColeccion = () => {
     setRecargarColecciones(prev => !prev); // para que viewdata se entere
