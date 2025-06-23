@@ -121,7 +121,7 @@ al seleccionar una coleccion, se puede dar click izq para ordenar desendente o a
 ![alt text](image-3.png)
 
 
-
+donde al finalizar la labor podemos cerrar sesion 
 ___________________________________________________________________________________
 
 Desarrollado por: Dario Delgado
