@@ -4,8 +4,6 @@ __pycache__/
 *.pyc
 *.env
 .env
-node_modules/
-dist/
 data.csv
 file.xlsx
 prueba_desarrollador_Jr.rar
