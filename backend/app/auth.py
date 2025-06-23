@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 # Configuración
 SECRET_KEY = "clave-secreta-super-segura" # Cámbiala por una más segura
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 10
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # Usuario de prueba
 fake_user = {

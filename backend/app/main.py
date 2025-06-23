@@ -21,10 +21,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-def saludo():
-    return {"mensaje": "Hola"}
-
 # Ruta para login
 @app.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
@@ -33,12 +29,14 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
         return {"access_token": token, "token_type": "bearer"}
     raise HTTPException(status_code=401, detail="Credenciales inválidas")
 
+# Ruta de prueba
 @app.get("/api/hola")
 def hola():
     return {"mensaje": "Hola desde FastAPI"}
 
+#Ruta para cargar el CSV
 @app.post("/api/upload-csv")
-async def upload_csv(file: UploadFile = File(...), user=Depends(verificar_token)):
+async def upload_csv(file: UploadFile = File(...)):#, user=Depends(verificar_token)
     if not file.filename.endswith(".csv"):
         raise HTTPException(status_code=400, detail="Solo se permiten archivos CSV")
 
@@ -51,14 +49,14 @@ async def upload_csv(file: UploadFile = File(...), user=Depends(verificar_token)
 
         df = pd.read_csv(pd.io.common.BytesIO(contents), sep=dialect.delimiter)
 
-        # Insertar en MongoDB como lista de diccionarios
+        # Insertar en mongo
         records = df.to_dict(orient="records")
         
         collection_name = f"csv_{uuid4().hex[:8]}"
         db[collection_name].insert_many(records)
         
         return {
-            "mensaje": f"Archivo cargado con éxito por {user}",
+            "mensaje": f"Archivo cargado con éxito",
             "registros_insertados": len(records),
             "coleccion": collection_name,
             "columnas": list(df.columns)
@@ -68,15 +66,14 @@ async def upload_csv(file: UploadFile = File(...), user=Depends(verificar_token)
 
 @app.get("/api/colecciones")
 def listar_colecciones():
-    #user=Depends(verificar_token) print(f"Acceso autorizado por: {user}")
     return db.list_collection_names()
 
 @app.get("/api/registros/{coleccion}")
-def obtener_registros(coleccion: str): #limite: int = 100
+def obtener_registros(coleccion: str):
     if coleccion not in db.list_collection_names():
         raise HTTPException(status_code=404, detail="Colección no encontrada")
 
-    datos = list(db[coleccion].find())#.limit(limite)
+    datos = list(db[coleccion].find())
     
-    # Convertimos los datos para que puedan ser serializados por JSON
+    # Convertimos los datos a JSON
     return json.loads(json_util.dumps(datos))
